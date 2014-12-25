@@ -13,8 +13,6 @@ public class Solutions {
 	 * @author Jialin  
 	 */
 	
-	
-	
     public String convertToTitle(int n) {
         StringBuilder res = new StringBuilder();
         if(n<=0) return res.toString();
@@ -23,12 +21,10 @@ public class Solutions {
             n = (n-1)/26;
         }
         return res.reverse().toString();
-    }
-    /*
-     * POJ 1160   - http://poj.org/problem?id=1160
-     */
-    public void PostOffice(){
-    	Scanner in = new Scanner(System.in);
-    }
+    }	
+    
+   public void PostOffice(){
+   	Scanner in = new Scanner(System.in);
+   }
 
 }
