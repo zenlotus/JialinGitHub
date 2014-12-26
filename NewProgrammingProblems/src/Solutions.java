@@ -24,6 +24,7 @@ public class Solutions {
     }	
     
    public void PostOffice(){
+	   
    		Scanner in = new Scanner(System.in);
    		int V = in.nextInt();
    		int P = in.nextInt();
@@ -34,14 +35,27 @@ public class Solutions {
    		
    		int[][] dp = new int[P][V];
    		int[][] cost = new int[V][V];
+   		
    		for(int i = 0; i < V; i++){
-   			cost[i][0] = 0;
-   			for(int j = 1; j < V; j++){
-   				
+   			cost[i][i] = 0;
+   			for(int j = i+1; j < V; j++){
+   				cost[i][j] = cost[i][j-1] + (pos[j] - pos[(j+i)/2]); 
    			}
    		}
    		
+   		for(int i = 0; i < V; i++){
+   			dp[0][i] = cost[0][i];
+   		}
    		
+   		for(int i = 1; i < P; i++){
+   			for(int j = i; j < V; j++){
+   				dp[i][j] = Integer.MAX_VALUE;
+   				for(int k = i-1; k <= j-1; k++){
+   					dp[i][j] = Math.min(dp[i][j], dp[i-1][k] + cost[k+1][j]);
+   				}
+   			}
+   		}
+   		System.out.println(dp[P-1][V-1]);
    }
 
 }
