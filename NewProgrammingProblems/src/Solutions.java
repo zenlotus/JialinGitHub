@@ -24,7 +24,24 @@ public class Solutions {
     }	
     
    public void PostOffice(){
-   	Scanner in = new Scanner(System.in);
+   		Scanner in = new Scanner(System.in);
+   		int V = in.nextInt();
+   		int P = in.nextInt();
+   		int pos[] = new int[V];
+   		for(int i =0; i < V; ++i){
+   			pos[i] = in.nextInt();
+   		}
+   		
+   		int[][] dp = new int[P][V];
+   		int[][] cost = new int[V][V];
+   		for(int i = 0; i < V; i++){
+   			cost[i][0] = 0;
+   			for(int j = 1; j < V; j++){
+   				
+   			}
+   		}
+   		
+   		
    }
 
 }
