@@ -11,8 +11,8 @@ public class TestClient {
 	
 	
 	public static void main(String[] args) {
-		TestConvertToTitle();
-
+		//TestConvertToTitle();
+		sol.PostOffice();
 	}
 
 }
