@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 
@@ -6,7 +9,11 @@ import java.util.Scanner;
  * Served as my saved code. 
  * 
  */
-
+ class UndirectedGraphNode {
+     int label;
+     ArrayList<UndirectedGraphNode> neighbors;
+     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ };
 public class Solutions {
 	/*
 	 * Leetcode problem: Excel Sheet Column Title
@@ -153,6 +160,7 @@ public class Solutions {
 	   }	   
    }
    
+   // POJ 
    public void TriTiling(){
 	   
 	   int[] D = new int[31];
@@ -168,5 +176,224 @@ public class Solutions {
 	   }
    }
     
+   //POJ 1159
+   public void Palindrome(){
+	   Scanner in = new Scanner(System.in);
+	   int N = in.nextInt();
+	   String s = in.next();
+	   int[][] dp = new int[N][N];
+	   for(int i = N-1; i >=0; --i){
+		   dp[i][i] = 0;
+		   for(int j = i+1; j < N; ++j){
+			   if(s.charAt(i)!=s.charAt(j)){
+				   dp[i][j] = Math.min(dp[i+1][j], dp[i][j-1])+1;
+			   }else{
+				   dp[i][j] = i+1 > j-1 ? 0: dp[i+1][j-1];
+			   }
+		   }
+	   }
+	   System.out.println(dp[0][N-1]);
+   }
+   
+   public void PalindromeOptimized(){
+	   Scanner in = new Scanner(System.in);
+	   int N = in.nextInt();
+	   String s = in.next();
+	   int[] lastRow = new int[N];
+	   int[] thisRow = new int[N];
+	   for(int i = N-1; i >=0; --i){
+		   thisRow[i] = 0;
+		   for(int j = i+1; j < N; ++j){
+			   if(s.charAt(i)!=s.charAt(j)){
+				   thisRow[j] = Math.min(lastRow[j], thisRow[j-1])+1;
+			   }else{
+				   thisRow[j] = i+1 > j-1 ? 0: lastRow[j-1];
+			   }
+		   }
+		   int[] tmp = lastRow;
+		   lastRow = thisRow;
+		   thisRow = tmp;
+	   }
+	   System.out.println(lastRow[N-1]);
+   }
+   
+   
+   //Lintcode - Backpack
+   
+   private int backPack(int m, int sum, int[] A, int start, int[] max){
+	   if(sum < m){
+		   max[0] = Math.max(max[0], sum);
+		   if(start>=A.length) return sum;
+           for(int i = start; i < A.length; i++){
+        	   if(sum+A[i]<=m){
+        		   int val = backPack(m, sum+A[i], A, i+1, max);
+        		   if(val==m){
+        			   max[0] = m;
+        			   return m;
+        		   }
+        	   }
+           }
+           return max[0];
+       }else if(sum==m){
+    	   max[0] = m;
+           return m;
+       }else{
+    	   return max[0];
+       }
+   }
+   
+   public int backPack(int m, int[] A) {
+	   if(A==null||A.length==0||m==0) return 0;
+       Arrays.sort(A);
+       int[] max = new int[1];
+       max[0] = 0;
+       backPack(m,0,A,0,max);
+       return max[0];
+   }   
+   
+   public int backPackDP(int m, int[] A) {
+	   if(A==null||A.length==0||m==0) return 0;
+       boolean[][] dp = new boolean[A.length+1][m+1];
+       dp[0][0] = true;
+       for(int i = 1; i <= A.length ; ++i){
+    	   dp[i][0] = true;  //this is tricky
+    	   for(int j = 1; j <= m; ++j){
+    		   dp[i][j] = dp[i-1][j];
+    		   if(j-A[i-1]>=0){
+    			   dp[i][j] = dp[i][j] || dp[i-1][j-A[i-1]];
+    		   }
+    	   }
+       }
+       for(int i = m; i>=0; i--){
+    	   if(dp[A.length][i]) return i;
+       }
+       return 0;
+   }
+
+   public int backPackDPOptimized(int m, int[] A) {
+	   if(A==null||A.length==0||m==0) return 0;
+       boolean[] dp = new boolean[m+1];
+       dp[0] = true;
+       for(int i = 1; i <= A.length ; ++i){
+    	   for(int j = m; j >=0; --j){
+    		   if(j-A[i-1]>=0){
+    			   dp[j] = dp[j] || dp[j-A[i-1]];
+    		   }
+    	   }
+       }
+       for(int i = m; i>=0; i--){
+    	   if(dp[i]) return i;
+       }
+       return 0;
+   }
+   
+   //lintcode hashcode
+   public int hashCode(char[] key,int HASH_SIZE) {
+       // write your code here
+       long sum = 0;
+       long base = 1;
+       for(int i = key.length-1; i >=0; --i){
+    	   sum += (key[i]*base)%(long)HASH_SIZE;
+           base = (base*33)%(long)HASH_SIZE;
+       }
+       return (int) (sum);
+       
+   }
+   
+   public int hashCode2(char[] key, int HASH_SIZE){
+	    long sum = 0;
+	    for(int i = 0; i < key.length; i++){
+	    	sum = ((sum*33)%HASH_SIZE + key[i]%HASH_SIZE)%HASH_SIZE;
+	    }
+	    return (int) sum;
+   }
+   
+   //lintcode clone graph
+   public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+       if(node==null) return node;
+       HashMap<UndirectedGraphNode,UndirectedGraphNode> map = new HashMap<UndirectedGraphNode,UndirectedGraphNode>();
+       LinkedList<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
+       queue.offer(node);
+       UndirectedGraphNode copy = new UndirectedGraphNode(node.label);
+       map.put(node, copy);
+       while(!queue.isEmpty()){
+           UndirectedGraphNode cur = queue.poll();
+           for(UndirectedGraphNode n: cur.neighbors){
+               if(!map.containsKey(n)){
+                   copy = new UndirectedGraphNode(n.label);
+                   map.put(n,copy);
+                   queue.offer(n);
+               }
+               map.get(cur).neighbors.add(map.get(n));
+           }
+       }
+       return map.get(node);
+       
+   }   
+   
+   //lintcode: Product of Array Excluding itselft
+   public ArrayList<Long> productExcludeItself(ArrayList<Integer> A) {
+       ArrayList<Long> res = new ArrayList<Long>();
+       if(A==null||A.size()<2) return res;
+       res.add(1L);
+       for(int i =1; i < A.size(); ++i){
+           res.add(res.get(i-1)*(long)A.get(i-1));
+       }
+       long temp = 1;
+       for(int i = A.size()-1; i>=0; --i){
+           res.set(i, res.get(i)* temp);
+           temp *= (long) A.get(i);
+       }
+       return res;
+   }
+   
+   //lintcode: Maximum Subarray Difference
+   public int maxDiffSubArrays(ArrayList<Integer> nums) {
+	   if(nums==null||nums.size()<2) return 0;
+	   int[] resMax = new int[nums.size()];
+	   int[] resMin = new int[nums.size()];
+	   
+	   int globalMax = nums.get(0);
+	   int localMax = nums.get(0);
+	   int globalMin = nums.get(0);
+	   int localMin = nums.get(0);
+	   
+	   resMax[0] = nums.get(0);
+	   resMin[0] = nums.get(0);
+	   for(int i = 1; i < nums.size(); ++i){
+		   localMax = Math.max(localMax+nums.get(i), nums.get(i));
+		   globalMax = Math.max(localMax, globalMax);
+		   resMax[i] = globalMax;
+
+		   localMin = Math.min(localMin+nums.get(i), nums.get(i));
+		   globalMin = Math.min(localMin, globalMin);
+		   resMin[i] = globalMin;
+		   
+	   }
+	   
+	   localMin = nums.get(nums.size()-1);
+	   globalMin = nums.get(nums.size()-1);
+	   localMax = nums.get(nums.size()-1);
+	   globalMax = nums.get(nums.size()-1);
+
+	   int result = Integer.MIN_VALUE;
+	   
+	   for(int i = nums.size()-2; i>=0; --i){
+		   
+		   result = Math.max(result, Math.abs(resMax[i]-globalMin));
+		   result = Math.max(result, Math.abs(resMin[i]-globalMax));
+		   
+		   localMin = Math.min(localMin+nums.get(i), nums.get(i));
+		   globalMin = Math.min(globalMin, localMin);
+		   
+		   localMax = Math.max(localMax+nums.get(i), nums.get(i));
+		   globalMax = Math.max(globalMax, localMax);
+		   
+		   
+		   
+	   }
+	   return result;
+	   
+   }   
 
 }
