@@ -287,6 +287,32 @@ public class Solutions {
        return 0;
    }
    
+   //lintcode backpack II
+   
+   public int backPackII(int m, int[] A, int V[]) {
+	   if(A==null||A.length==0||m==0 || V==null || V.length!=A.length) return 0;
+      int[][] dp = new int[A.length+1][m+1];
+      for(int i = 0; i <=m; ++i){
+    	  dp[0][i] = 0;
+      }
+      
+      for(int i = 1; i <= A.length ; ++i){
+   	   dp[i][0] = 0;  //this is tricky
+   	   for(int j = 1; j <= m; ++j){
+   		   
+   		   if(A[i-1]<=j){
+   			   dp[i][j] = Math.max(dp[i-1][j], dp[i-1][j-A[i-1]] + V[i-1]); 
+   		   }else{
+   			   dp[i][j] = dp[i-1][j];
+   		   }
+   	   }
+      }
+      return dp[A.length][m];
+   
+   }
+   
+   
+   
    //lintcode hashcode
    public int hashCode(char[] key,int HASH_SIZE) {
        // write your code here
@@ -394,6 +420,76 @@ public class Solutions {
 	   }
 	   return result;
 	   
-   }   
+   }
+   
+   //POJ - 2299 Ultra-QuickSort or Inversion count
+   public void UltraQuickSort(){
+	   Scanner in = new Scanner(System.in);
+	   int[] A = new int[499999];
+	   int n;
+	   while((n=in.nextInt())!=0){
+		   for(int i = 0; i < n; ++i){
+			   A[i] = in.nextInt(); 
+		   }
+		   System.out.println(GetInversionsCount(A,0, n-1));
+	   }
+   }
 
+   
+private int GetInversionsCount(int[] A, int start, int end) {
+	if(start==end) return 0;
+	int mid = start + (end-start)/2;
+	int inv = GetInversionsCount(A, start, mid) + GetInversionsCount(A, mid+1, end);
+	int[] temp = new int[end-start+1];
+	int i = start, j = mid+1, k = 0;
+
+	while(i <=mid && j <=end){
+		if(A[i]<=A[j]){
+			temp[k++] = A[i++];
+		}else{
+			temp[k++] = A[j++];
+			inv += mid - i+1;
+		}
+	}
+	while(mid>=i){
+		A[end--] = A[mid--];
+	}
+	while(k>0){
+		k--;
+		A[start+k] = temp[k];
+	}
+	return inv;
+}
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 }
